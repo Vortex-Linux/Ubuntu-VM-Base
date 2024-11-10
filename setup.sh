@@ -8,7 +8,7 @@ EOF
 
 while IFS= read -r command; do
     if [[ -n "$command" ]]; then
-        tmux send-keys -t debian-vm-base "$command" C-m
+        tmux send-keys -t ubuntu-vm-base "$command" C-m
         sleep 1
     fi
 done <<< "$INITIAL_COMMANDS"
@@ -60,14 +60,14 @@ locale-gen
 
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
-echo "debian" > /etc/hostname  
+echo "ubuntu" > /etc/hostname  
 
 systemctl enable fstrim.timer
 
-echo "root:debian" | chpasswd
+echo "root:ubuntu" | chpasswd
 
-useradd -m -g users -G sudo,storage,power -s /bin/bash debian
-echo "debian:debian" | chpasswd
+useradd -m -g users -G sudo,storage,power -s /bin/bash ubuntu
+echo "ubuntu:ubuntu" | chpasswd
 
 apt install -y xorg xinit openbox network-manager
 
@@ -81,7 +81,7 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/Xorg :0 -config /etc/X11/xorg.conf
 Restart=always
-User=debian
+User=ubuntu
 Environment=DISPLAY=:0
 
 [Install]
@@ -96,11 +96,11 @@ INSTALL_SCRIPT
 EOF
 )
 
-tmux send-keys -t debian-vm-base "$INSTALLATION_SCRIPT" C-m 
+tmux send-keys -t ubuntu-vm-base "$INSTALLATION_SCRIPT" C-m 
 
 sleep 5 &&
 
 EXECUTE_INSTALL_SCRIPT="bash install.sh"
 
-tmux send-keys -t debian-vm-base "$EXECUTE_INSTALL_SCRIPT" C-m 
+tmux send-keys -t ubuntu-vm-base "$EXECUTE_INSTALL_SCRIPT" C-m 
 
